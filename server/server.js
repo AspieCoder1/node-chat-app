@@ -17,14 +17,18 @@ io.on('connection', (socket) => {
 	socket.emit('newMessage', {
 		from: 'example@gmail.com',
 		text: 'Hello',
-		createdAt: '27/02/17 at 15:00'
+		createdAt: '27/02/17 at'
 	});
 
 	socket.on('createMessage', (message) => {
 		console.log(JSON.stringify(message, undefined, 2));
+		io.emit('newMessage', {
+			from: message.from,
+			text: message.text
+		});
 	});
 
-	socket.on('disconnect', () => {
+	socket.on('disconnect', function () {
 		console.log('Client disconnected');
 	});  
 });
