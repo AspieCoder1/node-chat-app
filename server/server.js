@@ -15,9 +15,13 @@ io.on('connection', (socket) => {
 	console.log('New user connected');
 
 	socket.emit('newMessage', {
-		from: 'example@gmail.com',
-		text: 'Hello',
-		createdAt: '27/02/17 at'
+		from: 'Admin',
+		text: 'Welcome to the chat app'
+	});
+
+	socket.broadcast.emit('newMessage', {
+		from: 'Admin',
+		text: 'New user joined chat'
 	});
 
 	socket.on('createMessage', (message) => {
