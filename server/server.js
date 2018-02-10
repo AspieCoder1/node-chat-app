@@ -2,7 +2,7 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
-var {generateMessage} = require('./utils/message');
+var {generateMessage, generateLocationMessage} = require('./utils/message');
 
 const publicPath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3000;
@@ -12,7 +12,7 @@ var io = socketIO(server);
 
 app.use(express.static(publicPath));
 
-io.on('connection', (socket) => {
+io.on('connection', function (socket) {
 	console.log('New user connected');
 
 	socket.emit('newMessage', {
@@ -22,10 +22,14 @@ io.on('connection', (socket) => {
 
 	socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined chat'));
 
-	socket.on('createMessage', (message, callback) => {
+	socket.on('createMessage', function (message, callback) {
 		console.log(JSON.stringify(message, undefined, 2));
 		io.emit('newMessage', generateMessage(message.from, message.text));
 		callback('Message Recieved');
+	});
+
+	socket.on('createLocationMessage', function (coords) {
+		io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));
 	});
 
 	socket.on('disconnect', function () {
@@ -33,6 +37,6 @@ io.on('connection', (socket) => {
 	});  
 });
 
-server.listen(port, () => {
+server.listen(port, function () {
 	console.log(`Server up on port ${port}`);
 });
