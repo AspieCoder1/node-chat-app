@@ -2,7 +2,10 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
-var {generateMessage, generateLocationMessage} = require('./utils/message');
+var {
+	generateMessage,
+	generateLocationMessage
+} = require('./utils/message');
 
 const publicPath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3000;
@@ -34,7 +37,7 @@ io.on('connection', function (socket) {
 
 	socket.on('disconnect', function () {
 		console.log('Client disconnected');
-	});  
+	});
 });
 
 server.listen(port, function () {
